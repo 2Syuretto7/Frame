@@ -1,5 +1,15 @@
 import { sql } from "drizzle-orm";
-import { bigserial, boolean, check, index, pgTable, smallint, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  bigserial,
+  boolean,
+  check,
+  index,
+  pgTable,
+  primaryKey,
+  smallint,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 
 /**
  * Frame has exactly one learner. The check constraint pins the only possible
@@ -48,4 +58,42 @@ export const loginAttempt = pgTable(
     index("login_attempt_ip_idx").on(t.kind, t.ipHash, t.createdAt),
     index("login_attempt_time_idx").on(t.kind, t.createdAt),
   ],
+);
+
+/**
+ * The curriculum graph, copied from `src/curriculum` on each production deploy so
+ * the planner can query it. The repository stays the source of truth. Nodes that
+ * leave the graph are marked retired rather than deleted, so history keeps its links.
+ */
+export const node = pgTable(
+  "node",
+  {
+    id: text("id").primaryKey(),
+    title: text("title").notNull(),
+    phase: smallint("phase").notNull(),
+    track: text("track").notNull(),
+    kind: text("kind").notNull(),
+    goal: text("goal").notNull(),
+    sessions: smallint("sessions").notNull(),
+    position: smallint("position").notNull(),
+    retired: boolean("retired").notNull().default(false),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("node_phase_idx").on(t.phase, t.position)],
+);
+
+/** A prerequisite or related link between two nodes, with a note on why they connect. */
+export const edge = pgTable(
+  "edge",
+  {
+    fromId: text("from_id")
+      .notNull()
+      .references(() => node.id, { onDelete: "cascade" }),
+    toId: text("to_id")
+      .notNull()
+      .references(() => node.id, { onDelete: "cascade" }),
+    type: text("type").notNull(),
+    note: text("note"),
+  },
+  (t) => [primaryKey({ columns: [t.fromId, t.toId, t.type] }), index("edge_to_idx").on(t.toId)],
 );

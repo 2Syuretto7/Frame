@@ -8,6 +8,13 @@
       "when": 1795246915429,
       "tag": "0000_accounts",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795248129141,
+      "tag": "0001_curriculum",
+      "breakpoints": true
     }
   ]
 }
