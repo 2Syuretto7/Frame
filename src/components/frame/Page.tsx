@@ -1,23 +1,25 @@
 import type { ReactNode } from "react";
+import { cx } from "@/components/midnight/cx";
 import { AppHeader } from "./AppHeader";
 
 /**
- * Page frame shared by every screen: safe-area aware side gutters
- * (16px on phones, 32px from tablets up) and a readable maximum width.
+ * Page frame shared by every screen. The header always sits in Frame's one
+ * centred column (--column, 960px), so the wordmark and navigation never move.
+ * Content uses the same column, except on the knowledge map (`wide`), which is
+ * the only page allowed to use the full width of the window.
  */
 export function Page({
   children,
-  showSettings = true,
+  signedIn = true,
   wide = false,
 }: {
   children: ReactNode;
-  showSettings?: boolean;
-  /** Fills the whole window, for the map. The page then takes exactly the screen's height. */
+  signedIn?: boolean;
   wide?: boolean;
 }) {
   return (
     <div
-      className={wide ? "flex h-dvh w-full flex-col" : "mx-auto flex min-h-dvh w-full max-w-[1120px] flex-col"}
+      className="flex min-h-dvh w-full flex-col"
       style={{
         paddingLeft: "max(var(--gutter), env(safe-area-inset-left))",
         paddingRight: "max(var(--gutter), env(safe-area-inset-right))",
@@ -25,8 +27,12 @@ export function Page({
         paddingBottom: "env(safe-area-inset-bottom)",
       }}
     >
-      <AppHeader showSettings={showSettings} />
-      <main className="flex min-h-0 flex-1 flex-col">{children}</main>
+      <div className="page-column">
+        <AppHeader signedIn={signedIn} />
+      </div>
+      <main id="main" className={cx("flex min-h-0 flex-1 flex-col", wide ? "w-full" : "page-column")}>
+        {children}
+      </main>
     </div>
   );
 }

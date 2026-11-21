@@ -1,30 +1,15 @@
-import Link from "next/link";
-import { Settings2, Waypoints } from "lucide-react";
 import { Wordmark } from "./Wordmark";
+import { MainNav } from "./MainNav";
 
-/** The quiet top bar: the wordmark, with the map and settings tucked away as two icons. */
-export function AppHeader({ showSettings = true }: { showSettings?: boolean }) {
+/**
+ * The same top bar on every page: the wordmark on the left and the labelled main
+ * navigation on the right. Signed-out pages show the wordmark alone, in the same place.
+ */
+export function AppHeader({ signedIn = true }: { signedIn?: boolean }) {
   return (
-    <header className="flex h-16 items-center justify-between">
+    <header className="flex h-16 flex-none items-center justify-between gap-4">
       <Wordmark />
-      <nav className="flex items-center gap-1" aria-label="Main">
-        <Link
-          href="/map"
-          aria-label="Knowledge map"
-          className="mds-btn mds-btn-ghost w-11 justify-center !px-0 text-ink-faint hover:text-ink"
-        >
-          <Waypoints size={18} strokeWidth={1.5} aria-hidden="true" />
-        </Link>
-        {showSettings ? (
-          <Link
-            href="/settings"
-            aria-label="Settings"
-            className="mds-btn mds-btn-ghost w-11 justify-center !px-0 text-ink-faint hover:text-ink"
-          >
-            <Settings2 size={18} strokeWidth={1.5} aria-hidden="true" />
-          </Link>
-        ) : null}
-      </nav>
+      {signedIn ? <MainNav /> : null}
     </header>
   );
 }

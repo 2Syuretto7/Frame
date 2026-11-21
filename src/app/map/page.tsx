@@ -17,7 +17,7 @@ async function getLayout() {
 
 export default async function MapPage() {
   const layout = await getLayout();
-  // Progress is recorded from Milestone 7; until then every node shows its starting state.
+  // Progress is not recorded yet, so every node shows its starting state.
   const views = deriveStates(GRAPH, new Map());
   const data: MapData = {
     nodes: GRAPH.nodes.map(({ id, title, phase, track, kind, goal, sessions, order, prereqs }) => ({

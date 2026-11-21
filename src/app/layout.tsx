@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Inter_Tight, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { themeBootScript } from "@/lib/theme";
 import "./globals.css";
 
-// Midnight's named fallbacks, downloaded at build time and served from Frame itself.
-const interTight = Inter_Tight({
-  variable: "--font-inter-tight",
+// Fallback faces, downloaded at build time and served from Frame itself. Inter replaces
+// Inter Tight because its wider default spacing keeps headings and long reading legible.
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
 });
@@ -44,7 +45,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en-IN"
       data-theme="dark"
-      className={`${interTight.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
       <head>

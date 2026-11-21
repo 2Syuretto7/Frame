@@ -4,7 +4,7 @@ import { Page } from "@/components/frame/Page";
 /** A narrow, centred column for the sign-in, setup and reset pages. */
 export function AuthShell({ title, lead, children }: { title: string; lead?: ReactNode; children: ReactNode }) {
   return (
-    <Page showSettings={false}>
+    <Page signedIn={false}>
       <section className="flex w-full max-w-[560px] flex-1 flex-col justify-center gap-8 py-12">
         <header className="flex flex-col gap-3">
           <h1 className="heading-2 m-0 text-ink">{title}</h1>
@@ -17,9 +17,7 @@ export function AuthShell({ title, lead, children }: { title: string; lead?: Rea
 }
 
 export function Notice({ children }: { children: ReactNode }) {
-  return (
-    <div className="rounded-card border border-line bg-raised p-4 text-ink-secondary">{children}</div>
-  );
+  return <div className="rounded-card border border-line bg-raised p-4 text-ink-secondary">{children}</div>;
 }
 
 export function FormSkeleton() {

@@ -1,18 +1,16 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import {
-  DEFAULT_THEME,
-  THEME_STORAGE_KEY,
-  isThemePreference,
-  resolveTheme,
-  type ThemePreference,
-} from "@/lib/theme";
+import { DEFAULT_THEME, THEME_STORAGE_KEY, isThemePreference, resolveTheme, type ThemePreference } from "@/lib/theme";
 
 const OPTIONS: Array<{ value: ThemePreference; label: string; hint: string }> = [
-  { value: "dark", label: "Dark", hint: "Midnight's default" },
-  { value: "light", label: "Light", hint: "Inverted greys, same accent" },
-  { value: "system", label: "Match my device", hint: "Follows your device setting" },
+  { value: "dark", label: "Dark", hint: "Light text on a dark background" },
+  { value: "light", label: "Light", hint: "Dark text on a light background" },
+  {
+    value: "system",
+    label: "Match my device",
+    hint: "Switches with your device's setting",
+  },
 ];
 
 const listeners = new Set<() => void>();
@@ -40,20 +38,22 @@ function setPreference(preference: ThemePreference) {
   listeners.forEach((listener) => listener());
 }
 
-/** Dark, light or match the device, as a radio group in Midnight's hairline style. */
+/** Dark, light or match the device, as a radio group whose choice is marked three ways: border, fill and a filled dot. */
 export function ThemeSelector() {
   const current = useSyncExternalStore(subscribe, readPreference, () => null);
   return (
     <fieldset className="m-0 flex flex-col gap-3 border-0 p-0">
-      <legend className="small mb-3 p-0 text-ink">Appearance</legend>
+      <legend className="heading-2 mb-4 p-0 text-ink">Appearance</legend>
       <div className="grid gap-3 sm:grid-cols-3">
         {OPTIONS.map((option) => {
           const selected = current === option.value;
           return (
             <label
               key={option.value}
-              className={`flex cursor-pointer flex-col gap-1 rounded-card border bg-raised p-4 transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--focus)] ${
-                selected ? "border-accent" : "border-line hover:bg-hover"
+              className={`flex cursor-pointer items-start gap-3 rounded-card border p-4 transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--focus)] ${
+                selected
+                  ? "border-accent bg-accent-soft"
+                  : "border-line bg-raised hover:bg-hover"
               }`}
             >
               <input
@@ -64,8 +64,21 @@ export function ThemeSelector() {
                 onChange={() => setPreference(option.value)}
                 className="sr-only"
               />
-              <span className="small text-ink">{option.label}</span>
-              <span className="caption text-ink-faint">{option.hint}</span>
+              <span
+                aria-hidden="true"
+                className={`mt-0.5 grid h-4 w-4 flex-none place-items-center rounded-round border ${
+                  selected ? "border-accent" : "border-line-input"
+                }`}
+              >
+                {selected ? <span className="h-2 w-2 rounded-round bg-accent" /> : null}
+              </span>
+              <span className="flex flex-col gap-1">
+                <span className="small text-ink">
+                  {option.label}
+                  {selected ? <span className="sr-only"> (selected)</span> : null}
+                </span>
+                <span className="caption text-ink-secondary">{option.hint}</span>
+              </span>
             </label>
           );
         })}

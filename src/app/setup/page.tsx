@@ -26,11 +26,16 @@ export default function SetupPage() {
 async function SetupContent() {
   await connection();
   if (!isDatabaseConfigured()) {
-    return <Notice>Frame&apos;s database is not connected yet. Finish Task C in the plan, then reload this page.</Notice>;
+    return <Notice>Frame cannot reach its database right now. Please try again in a minute.</Notice>;
   }
   if (await userExists(getDb())) notFound();
   if (!process.env.SETUP_TOKEN) {
-    return <Notice>Add a SETUP_TOKEN variable in Vercel and redeploy, as described in Task C.</Notice>;
+    return (
+      <Notice>
+        Setting up needs a setup code. In Vercel, add an environment variable called SETUP_TOKEN, redeploy, then reload
+        this page.
+      </Notice>
+    );
   }
   return <SetupForm />;
 }

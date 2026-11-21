@@ -1,36 +1,31 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Maximize2, Minus, Plus } from "lucide-react";
 import { StatusBadge } from "@/components/midnight";
 import { cx } from "@/components/midnight/cx";
-import { STATE_LABELS } from "@/curriculum/status";
-import { MapCanvas, type MapCanvasHandle } from "./MapCanvas";
+import { STATE_LABELS, type NodeState } from "@/curriculum/status";
+import { MapCanvas, NODE_STYLE, type MapCanvasHandle } from "./MapCanvas";
 import { BADGE_FOR_STATE, NodePanel } from "./NodePanel";
 import type { MapData } from "./types";
 
 type Mode = "map" | "list";
 
-const iconButton =
-  "mds-btn mds-btn-ghost h-11 w-11 justify-center !px-0 text-ink-faint hover:text-ink bg-ground border border-line";
+const toolButton =
+  "mds-btn mds-btn-ghost h-[46px] gap-2 border border-line bg-ground px-3 text-ink-secondary hover:text-ink";
 
-/** The knowledge map page: a pannable map or a plain list, with a panel for the chosen node. */
+/**
+ * The knowledge map page: the whole curriculum as a map (the one full-width view in
+ * Frame) or as a plain list, with a panel for the idea you choose.
+ */
 export function KnowledgeMap({ data }: { data: MapData }) {
   const [mode, setMode] = useState<Mode>("map");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const canvas = useRef<MapCanvasHandle>(null);
 
   const selected = selectedId ? (data.nodes.find((n) => n.id === selectedId) ?? null) : null;
-  const focusId = useMemo(() => {
-    const order = ["learning", "review", "available"] as const;
-    for (const state of order) {
-      const found = data.nodes.find((n) => data.views[n.id]?.state === state);
-      if (found) return found.id;
-    }
-    return data.nodes[0].id;
-  }, [data]);
 
-  // Bring the chosen node into view once the panel has opened and the map has resized.
+  // Bring the chosen idea into view once the panel has opened and the map has resized.
   const choose = (id: string | null) => {
     setSelectedId(id);
     if (!id || mode !== "map") return;
@@ -38,96 +33,166 @@ export function KnowledgeMap({ data }: { data: MapData }) {
     requestAnimationFrame(() => canvas.current?.centreOn(id, wide ? "centre" : "upper"));
   };
 
+  const panel = selected ? (
+    <NodePanel data={data} node={selected} onSelect={choose} onClose={() => setSelectedId(null)} />
+  ) : null;
+
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-4 pb-4">
-      <div className="flex items-center justify-between gap-4">
+    <div className="flex flex-col gap-4 pb-8">
+      <div className="page-column flex flex-wrap items-end justify-between gap-4">
         <div className="flex min-w-0 flex-col gap-1">
-          <h1 className="heading-2 m-0 text-ink">Knowledge map</h1>
-          <p className="caption m-0 hidden text-ink-faint sm:block">
-            {`${data.nodes.length} ideas in ${data.phases.length} phases. Tap an idea to see where it comes from and where it leads.`}
+          <h1 className="heading-1 m-0 text-ink">Knowledge map</h1>
+          <p className="caption m-0 text-ink-secondary">
+            {`${data.nodes.length} ideas in ${data.phases.length} phases. Choose an idea to see what it builds on and where it leads.`}
           </p>
         </div>
-        <div role="tablist" aria-label="View" className="flex rounded-control border border-line p-0.5">
-          {(["map", "list"] as const).map((m) => (
-            <button
-              key={m}
-              type="button"
-              role="tab"
-              aria-selected={mode === m}
-              onClick={() => setMode(m)}
+        <div className="flex flex-wrap gap-2">
+          <div role="tablist" aria-label="View" className="flex rounded-control border border-line p-0.5">
+            {(["map", "list"] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                role="tab"
+                aria-selected={mode === m}
+                onClick={() => setMode(m)}
+                className={cx(
+                  "small h-10 min-w-20 rounded-[2px] px-4 transition-colors",
+                  mode === m
+                    ? "bg-inverse text-inverse-ink"
+                    : "bg-transparent text-ink-secondary hover:bg-hover hover:text-ink",
+                )}
+              >
+                {m === "map" ? "Map" : "List"}
+              </button>
+            ))}
+          </div>
+          {mode === "map" ? (
+            <div className="flex gap-2" role="group" aria-label="Zoom">
+              <button type="button" className={toolButton} onClick={() => canvas.current?.zoomBy(0.8)}>
+                <Minus size={16} strokeWidth={1.5} aria-hidden="true" />
+                Zoom out
+              </button>
+              <button type="button" className={toolButton} onClick={() => canvas.current?.zoomBy(1.25)}>
+                <Plus size={16} strokeWidth={1.5} aria-hidden="true" />
+                Zoom in
+              </button>
+              <button type="button" className={toolButton} onClick={() => canvas.current?.fit()}>
+                <Maximize2 size={14} strokeWidth={1.5} aria-hidden="true" />
+                Whole map
+              </button>
+            </div>
+          ) : null}
+        </div>
+      </div>
+
+      {mode === "map" ? (
+        <>
+          <div
+            className="relative flex overflow-hidden rounded-sheet border border-line"
+            style={{ height: "max(360px, calc(100dvh - 300px))" }}
+          >
+            <div className="relative min-w-0 flex-1">
+              <MapCanvas ref={canvas} data={data} selectedId={selectedId} onSelect={choose} />
+            </div>
+            {panel ? (
+              <aside
+                aria-label={`${selected!.id} ${selected!.title}`}
+                className={cx(
+                  "overflow-y-auto border-line bg-ground",
+                  // Phones and tablets: a sheet over the lower part of the map.
+                  "absolute inset-x-0 bottom-0 max-h-[60%] rounded-t-sheet border-t",
+                  // Laptops: a column beside the map.
+                  "lg:static lg:max-h-none lg:w-[380px] lg:flex-none lg:rounded-none lg:border-t-0 lg:border-l",
+                )}
+              >
+                {panel}
+              </aside>
+            ) : null}
+          </div>
+          <div className="page-column flex flex-col gap-3">
+            <p id="map-keys" className="caption m-0 text-ink-secondary">
+              Drag to move, scroll or pinch to zoom. With a keyboard, press Tab to reach an idea, then use the arrow
+              keys.
+            </p>
+            <Legend />
+          </div>
+        </>
+      ) : (
+        <div className="page-column flex items-start gap-8">
+          <ListView data={data} selectedId={selectedId} onSelect={setSelectedId} />
+          {panel ? (
+            <aside
+              aria-label={`${selected!.id} ${selected!.title}`}
               className={cx(
-                "small h-10 min-w-16 rounded-[2px] px-3 sm:min-w-20 sm:px-4",
-                mode === m ? "bg-raised text-ink" : "bg-transparent text-ink-faint hover:text-ink",
+                "border-line bg-ground",
+                // Phones and tablets: a sheet fixed to the bottom of the screen.
+                "fixed inset-x-0 bottom-0 z-10 max-h-[70dvh] overflow-y-auto rounded-t-sheet border-t",
+                // Laptops: a column that stays in view as the list scrolls.
+                "lg:sticky lg:top-4 lg:max-h-[calc(100dvh-32px)] lg:w-[360px] lg:flex-none lg:rounded-sheet lg:border",
               )}
             >
-              {m === "map" ? "Map" : "List"}
-            </button>
-          ))}
+              {panel}
+            </aside>
+          ) : null}
         </div>
-      </div>
-
-      <div className="relative flex min-h-0 flex-1 overflow-hidden rounded-sheet border border-line">
-        <div className="relative min-h-[420px] min-w-0 flex-1">
-          {mode === "map" ? (
-            <>
-              <MapCanvas ref={canvas} data={data} selectedId={selectedId} onSelect={choose} focusId={focusId} />
-              <div className="absolute top-3 right-3 flex flex-col gap-2">
-                <button type="button" aria-label="Zoom in" className={iconButton} onClick={() => canvas.current?.zoomBy(1.25)}>
-                  <Plus size={18} strokeWidth={1.5} aria-hidden="true" />
-                </button>
-                <button type="button" aria-label="Zoom out" className={iconButton} onClick={() => canvas.current?.zoomBy(0.8)}>
-                  <Minus size={18} strokeWidth={1.5} aria-hidden="true" />
-                </button>
-                <button type="button" aria-label="Show the whole map" className={iconButton} onClick={() => canvas.current?.fit()}>
-                  <Maximize2 size={16} strokeWidth={1.5} aria-hidden="true" />
-                </button>
-              </div>
-              <Legend />
-            </>
-          ) : (
-            <ListView data={data} selectedId={selectedId} onSelect={setSelectedId} />
-          )}
-        </div>
-
-        {selected ? (
-          <aside
-            aria-label={`${selected.id} ${selected.title}`}
-            className={cx(
-              "overflow-y-auto border-line bg-ground",
-              // Phones and tablets: a sheet over the lower part of the map.
-              "absolute inset-x-0 bottom-0 max-h-[60%] rounded-t-sheet border-t",
-              // Laptops: a column beside the map.
-              "lg:static lg:max-h-none lg:w-[380px] lg:flex-none lg:rounded-none lg:border-t-0 lg:border-l",
-            )}
-          >
-            <NodePanel data={data} node={selected} onSelect={choose} onClose={() => setSelectedId(null)} />
-          </aside>
-        ) : null}
-      </div>
+      )}
     </div>
   );
 }
 
+const LEGEND: { state: NodeState; text: string }[] = [
+  { state: "available", text: "you can start it now" },
+  { state: "learning", text: "you have started it" },
+  { state: "review", text: "time to practise it again" },
+  { state: "learnt", text: "done for now" },
+  {
+    state: "locked",
+    text: "opens once you have learnt the ideas it builds on",
+  },
+];
+
+/** What each look means, below the map so it never covers it. */
 function Legend() {
-  const items = [
-    { key: "locked", swatch: "border border-dashed border-diagram-line" },
-    { key: "available", swatch: "border border-diagram-ink" },
-    { key: "learning", swatch: "border border-accent" },
-    { key: "review", swatch: "border border-warning" },
-    { key: "learnt", swatch: "border-2 border-success" },
-  ] as const;
   return (
-    <ul className="pointer-events-none absolute bottom-3 left-3 m-0 hidden list-none flex-wrap gap-x-4 gap-y-1 rounded-control border border-line bg-ground px-3 py-2 sm:flex">
-      {items.map((item) => (
-        <li key={item.key} className="caption flex items-center gap-2 text-ink-faint">
-          <span className={cx("inline-block h-3 w-4 rounded-[2px]", item.swatch)} aria-hidden="true" />
-          {STATE_LABELS[item.key]}
-        </li>
-      ))}
+    <ul className="m-0 flex list-none flex-wrap gap-x-6 gap-y-2 p-0" aria-label="What the colours mean">
+      {LEGEND.map(({ state, text }) => {
+        const look = NODE_STYLE[state];
+        return (
+          <li key={state} className="caption flex items-center gap-2 text-ink-secondary">
+            <svg width="20" height="14" aria-hidden="true" className="flex-none">
+              <rect
+                x="1"
+                y="1"
+                width="18"
+                height="12"
+                rx="2"
+                fill={look.fill}
+                stroke={look.stroke}
+                strokeWidth={look.width}
+                strokeDasharray={look.dash ? "3 2" : undefined}
+              />
+            </svg>
+            <span>
+              <span className="text-ink">{STATE_LABELS[state]}</span>
+              {`: ${text}`}
+            </span>
+          </li>
+        );
+      })}
+      <li className="caption flex items-center gap-2 text-ink-secondary">
+        <svg width="20" height="14" aria-hidden="true" className="flex-none">
+          <path d="M1,7 H15" stroke="var(--diagram-border)" strokeWidth="1.5" />
+          <path d="M13,3 L19,7 L13,11 z" fill="var(--diagram-border)" />
+        </svg>
+        <span>
+          <span className="text-ink">Arrow</span>: points to the idea that builds on it
+        </span>
+      </li>
     </ul>
   );
 }
 
+/** The same ideas as a list that scrolls with the page, status beside each title. */
 function ListView({
   data,
   selectedId,
@@ -138,33 +203,38 @@ function ListView({
   onSelect(id: string): void;
 }) {
   return (
-    <div className="absolute inset-0 overflow-y-auto">
+    <div className="flex min-w-0 flex-1 flex-col gap-10">
       {data.phases.map((phase) => (
-        <section key={phase.number} className="flex flex-col gap-3 border-b border-line px-4 py-6 last:border-b-0 sm:px-6">
+        <section key={phase.number} className="flex flex-col gap-3" aria-labelledby={`phase-${phase.number}`}>
           <div className="flex flex-col gap-1">
-            <p className="eyebrow m-0 text-ink-faint">{`PHASE ${phase.number} · WEEKS ${phase.weeks.toUpperCase()}`}</p>
-            <h2 className="heading-2 m-0 text-ink">{phase.title}</h2>
-            <p className="caption m-0 text-ink-faint">{phase.summary}</p>
+            <p className="eyebrow m-0 text-ink-secondary">{`PHASE ${phase.number} · WEEKS ${phase.weeks.toUpperCase()}`}</p>
+            <h2 id={`phase-${phase.number}`} className="heading-2 m-0 text-ink">
+              {phase.title}
+            </h2>
+            <p className="body m-0 text-ink-secondary">{phase.summary}</p>
           </div>
-          <ul className="m-0 flex list-none flex-col p-0">
+          <ul className="m-0 flex list-none flex-col border-y border-line p-0">
             {data.nodes
               .filter((n) => n.phase === phase.number)
               .map((node) => {
                 const view = data.views[node.id];
+                const current = selectedId === node.id;
                 return (
                   <li key={node.id} className="border-t border-line first:border-t-0">
                     <button
                       type="button"
                       onClick={() => onSelect(node.id)}
-                      aria-pressed={selectedId === node.id}
+                      aria-pressed={current}
                       className={cx(
-                        "flex min-h-12 w-full items-center gap-3 bg-transparent py-2 text-left",
-                        selectedId === node.id ? "text-accent" : "text-ink hover:text-accent",
+                        "flex min-h-12 w-full items-center gap-3 rounded-control bg-transparent px-2 py-2 text-left transition-colors",
+                        current ? "bg-accent-soft text-ink" : "text-ink hover:bg-hover",
                       )}
                     >
-                      <span className="eyebrow w-10 flex-none text-ink-faint">{node.id}</span>
-                      <span className="small min-w-0 flex-1">{node.title}</span>
-                      <StatusBadge status={BADGE_FOR_STATE[view.state]}>{STATE_LABELS[view.state]}</StatusBadge>
+                      <span className="eyebrow w-10 flex-none text-ink-secondary">{node.id}</span>
+                      <span className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+                        <span className="small">{node.title}</span>
+                        <StatusBadge status={BADGE_FOR_STATE[view.state]}>{STATE_LABELS[view.state]}</StatusBadge>
+                      </span>
                     </button>
                   </li>
                 );

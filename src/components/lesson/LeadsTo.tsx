@@ -30,7 +30,7 @@ export function LeadsTo({
         width={width}
         height={height}
         className="block max-w-none"
-        role="img"
+        role="group"
         aria-label={`${node.title} leads to ${next.map((n) => n.title).join(", ") || "nothing directly"}.`}
       >
         {next.map((n, i) => {
@@ -50,7 +50,11 @@ export function LeadsTo({
         })}
         <Box x={0} y={sourceY} node={node} current />
         {next.map((n, i) => (
-          <Link key={n.id} href={lessonIds.includes(n.id) ? `/learn/${n.id}` : "/map"}>
+          <Link
+            key={n.id}
+            href={lessonIds.includes(n.id) ? `/learn/${n.id}` : "/map"}
+            aria-label={`${n.id} ${n.title}`}
+          >
             <Box x={width - BOX_W} y={i * (BOX_H + GAP)} node={n} />
           </Link>
         ))}
