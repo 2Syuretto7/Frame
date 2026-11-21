@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { cx } from "@/components/midnight/cx";
+import { cx } from "@/components/ui/cx";
 
 export interface DiagramFrameProps {
   title: string;
@@ -10,7 +10,7 @@ export interface DiagramFrameProps {
   className?: string;
 }
 
-/** The frame every lesson diagram sits in: Midnight's diagram ground, hairline and labels. */
+/** The frame every lesson diagram sits in: the family diagram ground, hairline and labels. */
 export function DiagramFrame({ title, description, children, controls, className }: DiagramFrameProps) {
   return (
     <figure

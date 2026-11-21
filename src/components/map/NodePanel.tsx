@@ -2,18 +2,10 @@
 
 import Link from "next/link";
 import { ArrowRight, X } from "lucide-react";
-import { StatusBadge, type Status } from "@/components/midnight";
-import { STATE_LABELS, type NodeState } from "@/curriculum/status";
+import { Pill } from "@/components/ui/Pill";
 import { KIND_LABELS } from "@/curriculum/types";
+import { ROW_PILL, rowState } from "./states";
 import type { MapData, MapNode } from "./types";
-
-export const BADGE_FOR_STATE: Record<NodeState, Status> = {
-  locked: "paused",
-  available: "new",
-  learning: "progress",
-  learnt: "complete",
-  review: "pending",
-};
 
 interface NodePanelProps {
   data: MapData;
@@ -27,6 +19,7 @@ export function NodePanel({ data, node, onSelect, onClose }: NodePanelProps) {
   const byId = new Map(data.nodes.map((n) => [n.id, n]));
   const view = data.views[node.id] ?? { state: "locked" as const, mastery: 0 };
   const phase = data.phases.find((p) => p.number === node.phase);
+  const pill = ROW_PILL[rowState(view.state, data.lessonIds.includes(node.id))];
 
   const noteFor = (from: string, to: string) =>
     data.edges.find((e) => e.type === "prerequisite" && e.from === from && e.to === to)?.note ?? null;
@@ -49,13 +42,13 @@ export function NodePanel({ data, node, onSelect, onClose }: NodePanelProps) {
     <div className="flex flex-col gap-6 p-4 sm:p-6">
       <div className="flex items-start justify-between gap-4">
         <p className="eyebrow m-0 text-ink-secondary">
-          {`${node.id} · PHASE ${node.phase}${node.kind !== "concept" ? ` · ${KIND_LABELS[node.kind].toUpperCase()}` : ""}`}
+          {`${node.id} · Phase ${node.phase}${node.kind !== "concept" ? ` · ${KIND_LABELS[node.kind]}` : ""}`}
         </p>
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="mds-btn mds-btn-ghost -mt-2 -mr-2 h-11 w-11 flex-none justify-center !px-0 text-ink-secondary hover:text-ink"
+          className="btn btn-ghost btn-icon -mt-2 -mr-2 flex-none"
         >
           <X size={18} strokeWidth={1.5} aria-hidden="true" />
         </button>
@@ -64,7 +57,9 @@ export function NodePanel({ data, node, onSelect, onClose }: NodePanelProps) {
       <div className="flex flex-col gap-3">
         <h2 className="heading-2 m-0 text-ink">{node.title}</h2>
         <div>
-          <StatusBadge status={BADGE_FOR_STATE[view.state]}>{STATE_LABELS[view.state]}</StatusBadge>
+          <Pill tone={pill[1]} icon={pill[2]}>
+            {pill[0]}
+          </Pill>
         </div>
         {view.state === "locked" ? (
           <p className="body m-0 rounded-card border border-line bg-raised p-3 text-ink-secondary">
@@ -105,8 +100,8 @@ export function NodePanel({ data, node, onSelect, onClose }: NodePanelProps) {
         <h3 className="small m-0 text-ink">Lesson</h3>
         {data.lessonIds.includes(node.id) ? (
           <div>
-            <Link href={`/learn/${node.id}`} className="mds-btn mds-btn-secondary">
-              Open the lesson
+            <Link href={`/learn/${node.id}`} className="btn btn-primary">
+              {`Start ${node.id}: ${node.title}`}
               <ArrowRight size={16} strokeWidth={1.5} aria-hidden="true" />
             </Link>
           </div>
@@ -153,7 +148,7 @@ function LinkList({
                 className="flex min-h-11 w-full flex-col items-start gap-1 bg-transparent py-3 text-left text-ink hover:text-accent"
               >
                 <span className="small">
-                  <span className="eyebrow mr-2 text-ink-secondary">{node.id}</span>
+                  <span className="mono-meta mr-2">{node.id}</span>
                   {node.title}
                 </span>
                 {note ? <span className="caption text-ink-secondary">{note}</span> : null}

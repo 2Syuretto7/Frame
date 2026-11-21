@@ -18,7 +18,7 @@ export function SavedCheckbox({ error }: { error?: string }) {
         />
         <span>I have saved this passphrase somewhere safe, such as on paper or in a password manager.</span>
       </label>
-      {error ? <span className="mds-hint mds-hint-error">{error}</span> : null}
+      {error ? <span className="hint text-error">{error}</span> : null}
     </div>
   );
 }

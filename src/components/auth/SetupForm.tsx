@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { Button, TextField } from "@/components/midnight";
+import { Button, TextField } from "@/components/ui";
 import { setupAccount, type FormState } from "@/server/auth/actions";
 import { PassphraseChooser } from "./PassphraseChooser";
 import { SavedCheckbox } from "./SavedCheckbox";
@@ -30,7 +30,7 @@ export function SetupForm() {
       />
       <PassphraseChooser error={fieldError("passphrase")} />
       <SavedCheckbox error={fieldError("savedIt")} />
-      {generalError ? <p className="mds-hint mds-hint-error m-0">{generalError}</p> : null}
+      {generalError ? <p className="hint text-error m-0">{generalError}</p> : null}
       <div>
         <Button type="submit" disabled={pending}>
           {pending ? "Creating your account" : "Create my account"}

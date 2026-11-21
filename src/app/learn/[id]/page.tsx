@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Page } from "@/components/frame/Page";
+import { TopBar } from "@/components/shell/TopBar";
 import { LessonView } from "@/components/lesson/LessonView";
 import { GRAPH } from "@/curriculum/graph";
 import { LESSON_IDS, LESSONS } from "@/lessons";
@@ -20,8 +20,9 @@ export default async function LessonPage({ params }: PageProps<"/learn/[id]">) {
   const lesson = LESSONS[id];
   if (!lesson) notFound();
   return (
-    <Page>
+    <div className="shell">
+      <TopBar />
       <LessonView lesson={lesson} />
-    </Page>
+    </div>
   );
 }

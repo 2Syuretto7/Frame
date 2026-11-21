@@ -1,5 +1,6 @@
 import "server-only";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { getDb, isDatabaseConfigured } from "@/db/client";
 import { validateSession, type NewSession, type ValidSession } from "./core";
@@ -11,6 +12,8 @@ export async function readSessionToken(): Promise<string | null> {
 
 /** The current session, or null. Every read of your data goes through this. */
 export async function getCurrentSession(): Promise<ValidSession | null> {
+  // Always decided per request, never baked into a prerendered page at build time.
+  await connection();
   if (!isDatabaseConfigured()) return null;
   const token = await readSessionToken();
   if (!token) return null;

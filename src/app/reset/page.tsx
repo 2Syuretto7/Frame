@@ -12,6 +12,7 @@ export const metadata: Metadata = { title: "Reset passphrase" };
 export default function ResetPage() {
   return (
     <AuthShell
+      eyebrow="Forgotten passphrase"
       title="Choose a new passphrase"
       lead="Your progress stays as it is. Every device will be signed out, then this one signed back in."
     >

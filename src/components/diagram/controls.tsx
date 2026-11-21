@@ -2,10 +2,10 @@
 
 import { useEffect, useId, useState } from "react";
 import { Pause, Play, RotateCcw, SkipBack, SkipForward } from "lucide-react";
-import { cx } from "@/components/midnight/cx";
+import { cx } from "@/components/ui/cx";
 
 const control =
-  "mds-btn mds-btn-ghost h-11 min-w-11 justify-center gap-2 border-line px-3 disabled:cursor-not-allowed disabled:opacity-40";
+  "btn btn-ghost h-11 min-w-11 justify-center gap-2 border-line px-3 disabled:cursor-not-allowed disabled:opacity-40";
 
 /** Back, next, play and start-again controls for a diagram that runs in steps. */
 export function Stepper({

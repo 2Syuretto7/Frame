@@ -1,4 +1,4 @@
-import { cx } from "@/components/midnight/cx";
+import { cx } from "@/components/ui/cx";
 import { highlightLine, type TokenKind } from "@/lib/highlight";
 
 const TOKEN_COLOUR: Record<TokenKind, string | undefined> = {
@@ -20,19 +20,19 @@ export interface CodeBlockProps {
 }
 
 /**
- * Lesson code in Midnight's CodeWindow style: always dark, mono, with line numbers.
+ * Lesson code in the family's code style (as in Frontier): mono on the subtle ground, with line numbers.
  * The active line is marked with the accent bar, since it is the line in focus.
  */
 export function CodeBlock({ code, title, active = [], dim = [], className }: CodeBlockProps) {
   const lines = Array.isArray(code) ? code : code.replace(/\n$/, "").split("\n");
   return (
-    <div className={cx("mds-window", className)} style={{ boxShadow: "none" }}>
+    <div className={cx("code-runner", className)}>
       {title ? (
-        <div className="mds-window-head">
-          <span className="mds-window-title">{title}</span>
+        <div className="code-bar">
+          <span className="code-lang">{title}</span>
         </div>
       ) : null}
-      <pre className="m-0 overflow-x-auto py-3" style={{ font: "var(--text-code)" }}>
+      <pre className="m-0 overflow-x-auto py-3" style={{ font: "var(--text-code)", background: "var(--bg-subtle)" }}>
         <code className="block min-w-max">
           {lines.map((line, i) => {
             const isActive = active.includes(i);

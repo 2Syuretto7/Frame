@@ -26,6 +26,8 @@ import { clearSessionCookie, getCurrentSession, requireSession, setSessionCookie
 export interface FormState {
   error?: string;
   field?: string;
+  /** Set when the form succeeded and stays on the page. */
+  done?: string;
 }
 
 const NOT_CONNECTED: FormState = {
@@ -52,7 +54,8 @@ async function startSession(): Promise<void> {
 export async function setupAccount(_prev: FormState, form: FormData): Promise<FormState> {
   if (!isDatabaseConfigured()) return NOT_CONNECTED;
   const expected = process.env.SETUP_TOKEN;
-  if (!expected) return { error: "Setting up needs a setup code. Add SETUP_TOKEN in Vercel, redeploy, then try again." };
+  if (!expected)
+    return { error: "Setting up needs a setup code. Add SETUP_TOKEN in Vercel, redeploy, then try again." };
 
   const db = getDb();
   if (await userExists(db)) return { error: "Frame already has its account. Sign in instead." };
@@ -127,6 +130,31 @@ export async function resetPassphrase(_prev: FormState, form: FormData): Promise
   await recordAttempt(db, "reset", ipHash, true);
   await startSession();
   redirect("/");
+}
+
+/** Settings: change the passphrase while signed in. Every other device is signed out. */
+export async function changeOwnPassphrase(_prev: FormState, form: FormData): Promise<FormState> {
+  const current = await requireSession();
+  const db = getDb();
+  const ipHash = await clientAddressHash();
+  const blocked = await limited("signin", ipHash);
+  if (blocked) return blocked;
+
+  if (!(await checkPassphrase(db, String(form.get("current") ?? "")))) {
+    await recordAttempt(db, "signin", ipHash, false);
+    return { error: "That is not your current passphrase.", field: "current" };
+  }
+  const passphrase = String(form.get("passphrase") ?? "");
+  const strength = assessPassphrase(passphrase);
+  if (!strength.ok) return { error: strength.message, field: "passphrase" };
+  if (form.get("savedIt") !== "on") {
+    return { error: "Please confirm you have saved the new passphrase somewhere safe.", field: "savedIt" };
+  }
+
+  await changePassphrase(db, passphrase);
+  await deleteOtherSessions(db, current.tokenHash);
+  await recordAttempt(db, "signin", ipHash, true);
+  return { done: "Passphrase changed. Every other device has been signed out." };
 }
 
 export async function signOut(): Promise<void> {

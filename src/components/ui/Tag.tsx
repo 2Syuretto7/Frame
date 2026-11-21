@@ -6,7 +6,7 @@ export interface TagProps {
   className?: string;
 }
 
-/** Midnight Tag: a mono uppercase eyebrow in an 18px hairline box. One or two words. */
+/** A mono uppercase tag in a hairline box. One or two words. */
 export function Tag({ children, className }: TagProps) {
-  return <span className={cx("mds-tag", className)}>{children}</span>;
+  return <span className={cx("mono-tag", className)}>{children}</span>;
 }

@@ -4,7 +4,7 @@ import { SESSION_TTL_MS, validateSession } from "@/server/auth/core";
 import { SESSION_COOKIE, SESSION_COOKIE_OPTIONS } from "@/server/auth/cookie";
 
 /** Pages anyone may open. Everything else needs a valid session. */
-const PUBLIC_PATHS = new Set(["/signin", "/setup", "/reset"]);
+const PUBLIC_PATHS = new Set(["/signin", "/setup", "/reset", "/api/version"]);
 
 /**
  * Checks the session on every page request before anything renders. A valid

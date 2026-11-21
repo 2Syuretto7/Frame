@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Eye } from "lucide-react";
-import { cx } from "@/components/midnight/cx";
+import { cx } from "@/components/ui/cx";
 import type { WorkedStep } from "@/lessons/types";
 import { CodeBlock } from "./CodeBlock";
 
@@ -34,15 +34,19 @@ export function WorkedExample({
         {revealed ? (
           <pre
             className="m-0 overflow-x-auto rounded-control border p-3"
-            style={{ background: "var(--code-background)", borderColor: "var(--code-border)", color: "var(--code-text)", font: "var(--text-code)" }}
+            style={{
+              background: "var(--code-background)",
+              borderColor: "var(--code-border)",
+              color: "var(--code-text)",
+              font: "var(--text-code)",
+            }}
           >
             {output.join("\n")}
           </pre>
         ) : (
           <div>
-            <button type="button" className="mds-btn mds-btn-secondary" onClick={() => setRevealed(true)}>
-              <Eye size={16} strokeWidth={1.5} aria-hidden="true" />
-              I have my prediction, show the output
+            <button type="button" className="btn" onClick={() => setRevealed(true)}>
+              <Eye size={16} strokeWidth={1.5} aria-hidden="true" />I have my prediction, show the output
             </button>
           </div>
         )}
