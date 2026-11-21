@@ -57,6 +57,24 @@
   color-scheme: light;
 }
 
+/*
+ * Mastery on the knowledge map, as steps on Midnight's navy scale (an agreed
+ * stretch of the system). Dark theme deepens towards the ground; light lightens.
+ */
+:root {
+  --mastery-1: var(--navy-900);
+  --mastery-2: var(--navy-800);
+  --mastery-3: var(--navy-700);
+  --mastery-4: var(--navy-600);
+}
+
+[data-theme="light"] {
+  --mastery-1: var(--navy-100);
+  --mastery-2: var(--navy-200);
+  --mastery-3: var(--navy-300);
+  --mastery-4: var(--navy-400);
+}
+
 /* Page base sits in the base layer so Midnight's component styles always win over it. */
 @layer base {
   html {
