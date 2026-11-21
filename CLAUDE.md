@@ -14,4 +14,6 @@ thread; this file records the rules that every change must keep.
   review due, `error` for a failed check or misconception, `idle` (always with a text label) for locked.
 - One primary Button per view. Hairlines, not shadows. Corners 2px, 4px, 6px.
 - Secrets live only in Vercel environment variables, never in the repository.
-- Before opening a pull request, run `npm run check` (lint, typecheck and build).
+- Before opening a pull request, run `npm run check` (lint, typecheck, tests and build).
+- Claude merges every pull request once CI is green. Arnav does not merge.
+- Database migrations must stay additive (new tables or nullable columns) until the code that needs them is merged.
