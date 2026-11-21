@@ -2,7 +2,7 @@ import { getDb } from "@/db/client";
 import { listSessions } from "@/server/auth/core";
 import { requireSession } from "@/server/auth/session";
 import { signOut, signOutDevice, signOutEverywhere, signOutOtherDevices } from "@/server/auth/actions";
-import { Tag } from "@/components/midnight";
+import { Tag } from "@/components/ui";
 import { ConfirmAction } from "@/components/frame/ConfirmAction";
 import { LocalTime } from "@/components/frame/LocalTime";
 
@@ -13,21 +13,18 @@ export async function SessionsList() {
   const others = sessions.filter((s) => s.tokenHash !== current.tokenHash).length;
 
   return (
-    <div className="flex flex-col gap-6">
-      <ul className="m-0 flex list-none flex-col gap-3 p-0">
+    <div className="flex min-w-0 flex-col gap-5">
+      <ul className="device-list">
         {sessions.map((s) => {
           const isCurrent = s.tokenHash === current.tokenHash;
           return (
-            <li
-              key={s.tokenHash}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-card border border-line bg-raised p-4"
-            >
-              <div className="flex min-w-0 flex-col gap-1">
-                <div className="flex flex-wrap items-center gap-3">
-                  <span className="small text-ink">{s.deviceLabel}</span>
+            <li key={s.tokenHash}>
+              <div className="min-w-0">
+                <p className="device-name">
+                  {s.deviceLabel}
                   {isCurrent ? <Tag>This device</Tag> : null}
-                </div>
-                <span className="caption text-ink-secondary">
+                </p>
+                <p className="hint">
                   {isCurrent ? (
                     "Active now"
                   ) : (
@@ -35,11 +32,12 @@ export async function SessionsList() {
                       Last active <LocalTime iso={s.lastSeenAt.toISOString()} />
                     </>
                   )}
-                </span>
+                </p>
               </div>
               {isCurrent ? (
                 <ConfirmAction
                   variant="ghost"
+                  size="sm"
                   label="Sign out"
                   question="Sign out of this device?"
                   confirmLabel="Yes, sign out"
@@ -48,6 +46,7 @@ export async function SessionsList() {
               ) : (
                 <ConfirmAction
                   variant="ghost"
+                  size="sm"
                   label="Sign out"
                   question={`Sign out ${s.deviceLabel}?`}
                   confirmLabel="Yes, sign it out"
@@ -69,6 +68,7 @@ export async function SessionsList() {
           />
         ) : null}
         <ConfirmAction
+          variant="danger"
           label="Sign out everywhere"
           question="Sign out every device, including this one?"
           confirmLabel="Yes, sign out everywhere"

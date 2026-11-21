@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, type ButtonVariant } from "@/components/midnight";
+import { Button, type ButtonVariant } from "@/components/ui";
 
 interface ConfirmActionProps {
   /** The button that starts the action, such as "Sign out everywhere". */
@@ -13,6 +13,7 @@ interface ConfirmActionProps {
   action(form: FormData): void | Promise<void>;
   fields?: Record<string, string>;
   variant?: ButtonVariant;
+  size?: "sm" | "md";
 }
 
 /** A destructive action that asks once, in place, before it happens. */
@@ -23,12 +24,13 @@ export function ConfirmAction({
   action,
   fields = {},
   variant = "secondary",
+  size = "md",
 }: ConfirmActionProps) {
   const [asking, setAsking] = useState(false);
 
   if (!asking) {
     return (
-      <Button type="button" variant={variant} onClick={() => setAsking(true)}>
+      <Button type="button" variant={variant} size={size} onClick={() => setAsking(true)}>
         {label}
       </Button>
     );
@@ -50,13 +52,13 @@ export function ConfirmAction({
       {Object.entries(fields).map(([name, value]) => (
         <input key={name} type="hidden" name={name} value={value} />
       ))}
-      <span className="small text-ink" role="status">
+      <span className="hint confirm-question" role="status">
         {question}
       </span>
-      <Button type="submit" variant="secondary" autoFocus>
+      <Button type="submit" variant={variant === "danger" ? "danger" : "secondary"} size={size} autoFocus>
         {confirmLabel}
       </Button>
-      <Button type="button" variant="ghost" onClick={() => setAsking(false)}>
+      <Button type="button" variant="ghost" size={size} onClick={() => setAsking(false)}>
         Cancel
       </Button>
     </form>

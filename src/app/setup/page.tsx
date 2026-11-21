@@ -13,8 +13,10 @@ export const metadata: Metadata = { title: "Set up" };
 export default function SetupPage() {
   return (
     <AuthShell
-      title="Set up Frame"
-      lead="Create the one account Frame will ever have. After this, sign-up is locked for good."
+      eyebrow="First visit"
+      title="Welcome to Frame"
+      lead="Choose the one passphrase you will use on every device. After this, sign-up closes and only you can enter."
+      foot="Your passphrase is stored only as a one-way Argon2id hash."
     >
       <Suspense fallback={<FormSkeleton />}>
         <SetupContent />

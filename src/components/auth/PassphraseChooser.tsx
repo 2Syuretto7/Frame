@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Copy, RefreshCw } from "lucide-react";
-import { Button, TextField } from "@/components/midnight";
+import { Button, TextField } from "@/components/ui";
 import { assessPassphrase, generatePassphrase } from "@/lib/passphrase";
 
 type Mode = "none" | "generated" | "own";
@@ -11,7 +11,7 @@ type Mode = "none" | "generated" | "own";
  * Lets you generate a diceware passphrase in the browser, or type your own.
  * Whatever is chosen is submitted in a field named `passphrase`.
  */
-export function PassphraseChooser({ error }: { error?: string }) {
+export function PassphraseChooser({ error, label = "Passphrase" }: { error?: string; label?: string }) {
   const [mode, setMode] = useState<Mode>("none");
   const [generated, setGenerated] = useState("");
   const [own, setOwn] = useState("");
@@ -36,7 +36,7 @@ export function PassphraseChooser({ error }: { error?: string }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <span className="small text-ink">Passphrase</span>
+      <span className="small text-ink">{label}</span>
 
       {mode === "none" ? (
         <div className="flex flex-wrap gap-3">
@@ -72,8 +72,8 @@ export function PassphraseChooser({ error }: { error?: string }) {
             </Button>
           </div>
           <span className="caption text-ink-faint">
-            Seven random words from the EFF list, about 90 bits of strength. When you sign in, capital letters are ignored and
-            you can type spaces instead of hyphens.
+            Seven random words from the EFF list, about 90 bits of strength. When you sign in, capital letters are
+            ignored and you can type spaces instead of hyphens.
           </span>
         </div>
       ) : null}
@@ -102,7 +102,7 @@ export function PassphraseChooser({ error }: { error?: string }) {
         </div>
       ) : null}
 
-      {error ? <span className="mds-hint mds-hint-error">{error}</span> : null}
+      {error ? <span className="hint text-error">{error}</span> : null}
     </div>
   );
 }

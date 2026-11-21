@@ -1,25 +1,37 @@
 import type { ReactNode } from "react";
-import { Page } from "@/components/frame/Page";
+import { AuthFrame } from "@/components/shell/AuthFrame";
 
-/** A narrow, centred column for the sign-in, setup and reset pages. */
-export function AuthShell({ title, lead, children }: { title: string; lead?: ReactNode; children: ReactNode }) {
+/** The sign-in, setup and reset pages: the family's signed-out frame with one card. */
+export function AuthShell({
+  eyebrow,
+  title,
+  lead,
+  foot,
+  children,
+}: {
+  eyebrow?: string;
+  title: string;
+  lead?: ReactNode;
+  foot?: ReactNode;
+  children: ReactNode;
+}) {
   return (
-    <Page signedIn={false}>
-      <section className="flex w-full max-w-[560px] flex-1 flex-col justify-center gap-8 py-12">
-        <header className="flex flex-col gap-3">
-          <h1 className="heading-2 m-0 text-ink">{title}</h1>
-          {lead ? <p className="lead m-0 text-ink-secondary">{lead}</p> : null}
-        </header>
+    <AuthFrame>
+      <div className="card">
+        {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
+        <h1>{title}</h1>
+        {lead ? <p className="lede">{lead}</p> : null}
         {children}
-      </section>
-    </Page>
+        {foot ? <p className="foot">{foot}</p> : null}
+      </div>
+    </AuthFrame>
   );
 }
 
 export function Notice({ children }: { children: ReactNode }) {
-  return <div className="rounded-card border border-line bg-raised p-4 text-ink-secondary">{children}</div>;
+  return <p className="error">{children}</p>;
 }
 
 export function FormSkeleton() {
-  return <div className="h-40 rounded-card border border-line" aria-hidden="true" />;
+  return <div className="h-40" aria-hidden="true" />;
 }

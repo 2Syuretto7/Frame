@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -12,7 +13,11 @@ export const metadata: Metadata = { title: "Sign in" };
 
 export default function SignInPage({ searchParams }: PageProps<"/signin">) {
   return (
-    <AuthShell title="Sign in" lead="Paste or type your passphrase. You will stay signed in on this device.">
+    <AuthShell
+      eyebrow="Welcome back"
+      title="Sign in to Frame"
+      lead="Type or paste your passphrase. This device stays signed in for 90 days."
+    >
       <Suspense fallback={<FormSkeleton />}>
         <SignInContent searchParams={searchParams} />
       </Suspense>
@@ -21,6 +26,7 @@ export default function SignInPage({ searchParams }: PageProps<"/signin">) {
 }
 
 async function SignInContent({ searchParams }: { searchParams: PageProps<"/signin">["searchParams"] }) {
+  await connection();
   if (!isDatabaseConfigured()) {
     return <Notice>Frame cannot reach its database right now. Please try again in a minute.</Notice>;
   }
@@ -39,9 +45,9 @@ async function SignInContent({ searchParams }: { searchParams: PageProps<"/signi
   const params = await searchParams;
   const next = typeof params.next === "string" ? params.next : "/";
   return (
-    <div className="flex flex-col gap-8">
+    <div>
       <SignInForm next={next} />
-      <p className="caption m-0 text-ink-faint">
+      <p className="foot">
         Forgotten your passphrase? In Vercel, add an environment variable called RESET_TOKEN, then open /reset on this
         site to choose a new one.
       </p>

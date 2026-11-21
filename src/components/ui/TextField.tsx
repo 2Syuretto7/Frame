@@ -9,20 +9,20 @@ export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
-/** Midnight TextField: a 14px/500 label over a 40px input with a hairline and 2px corners. */
+/** The family field: a 13px label over a 40px input, with a hint or an error below. */
 export function TextField({ label, hint, error, className, id, ...rest }: TextFieldProps) {
   const autoId = useId();
   const inputId = id ?? autoId;
   return (
-    <div className={cx("mds-field", className)}>
-      <label className="mds-label" htmlFor={inputId}>
-        {label}
-      </label>
-      <input id={inputId} className="mds-input" aria-invalid={error ? "true" : undefined} {...rest} />
+    <div className={cx("field", className)}>
+      <label htmlFor={inputId}>{label}</label>
+      <input id={inputId} className="input" aria-invalid={error ? "true" : undefined} {...rest} />
       {error ? (
-        <span className="mds-hint mds-hint-error">{error}</span>
+        <p className="hint" style={{ color: "var(--danger)" }} role="alert">
+          {error}
+        </p>
       ) : hint ? (
-        <span className="mds-hint">{hint}</span>
+        <p className="hint">{hint}</p>
       ) : null}
     </div>
   );
