@@ -317,7 +317,8 @@ export function BranchExplorer() {
                 className="flex flex-col rounded-control border px-3 py-2"
                 style={{
                   borderColor: taken ? "var(--accent)" : "var(--diagram-border)",
-                  opacity: checked ? 1 : 0.5,
+                  // Lines never reached are dashed rather than faded, so their text keeps full contrast.
+                  borderStyle: checked ? "solid" : "dashed",
                 }}
               >
                 <span className="flex items-center justify-between gap-3">

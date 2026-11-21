@@ -2,10 +2,11 @@ import { getDb } from "@/db/client";
 import { listSessions } from "@/server/auth/core";
 import { requireSession } from "@/server/auth/session";
 import { signOut, signOutDevice, signOutEverywhere, signOutOtherDevices } from "@/server/auth/actions";
-import { Button, Tag } from "@/components/midnight";
+import { Tag } from "@/components/midnight";
+import { ConfirmAction } from "@/components/frame/ConfirmAction";
 import { LocalTime } from "@/components/frame/LocalTime";
 
-/** Every device signed in to Frame, with a way to sign each one out. */
+/** Every device signed in to Frame, with a way to sign each one out. Every sign-out asks first. */
 export async function SessionsList() {
   const current = await requireSession();
   const sessions = await listSessions(getDb());
@@ -19,43 +20,60 @@ export async function SessionsList() {
           return (
             <li
               key={s.tokenHash}
-              className={`flex flex-wrap items-center justify-between gap-3 rounded-card border bg-raised p-4 ${
-                isCurrent ? "border-accent" : "border-line"
-              }`}
+              className="flex flex-wrap items-center justify-between gap-3 rounded-card border border-line bg-raised p-4"
             >
               <div className="flex min-w-0 flex-col gap-1">
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   <span className="small text-ink">{s.deviceLabel}</span>
                   {isCurrent ? <Tag>This device</Tag> : null}
                 </div>
-                <span className="caption text-ink-faint">
-                  Signed in <LocalTime iso={s.createdAt.toISOString()} />, last used{" "}
-                  <LocalTime iso={s.lastSeenAt.toISOString()} />
+                <span className="caption text-ink-secondary">
+                  {isCurrent ? (
+                    "Active now"
+                  ) : (
+                    <>
+                      Last active <LocalTime iso={s.lastSeenAt.toISOString()} />
+                    </>
+                  )}
                 </span>
               </div>
-              <form action={isCurrent ? signOut : signOutDevice}>
-                <input type="hidden" name="tokenHash" value={s.tokenHash} />
-                <Button type="submit" variant="ghost">
-                  Sign out
-                </Button>
-              </form>
+              {isCurrent ? (
+                <ConfirmAction
+                  variant="ghost"
+                  label="Sign out"
+                  question="Sign out of this device?"
+                  confirmLabel="Yes, sign out"
+                  action={signOut}
+                />
+              ) : (
+                <ConfirmAction
+                  variant="ghost"
+                  label="Sign out"
+                  question={`Sign out ${s.deviceLabel}?`}
+                  confirmLabel="Yes, sign it out"
+                  action={signOutDevice}
+                  fields={{ tokenHash: s.tokenHash }}
+                />
+              )}
             </li>
           );
         })}
       </ul>
       <div className="flex flex-wrap gap-3">
         {others > 0 ? (
-          <form action={signOutOtherDevices}>
-            <Button type="submit" variant="secondary">
-              Sign out other devices
-            </Button>
-          </form>
+          <ConfirmAction
+            label="Sign out other devices"
+            question={`Sign out the ${others === 1 ? "other device" : `${others} other devices`}? This one stays signed in.`}
+            confirmLabel="Yes, sign them out"
+            action={signOutOtherDevices}
+          />
         ) : null}
-        <form action={signOutEverywhere}>
-          <Button type="submit" variant="secondary">
-            Sign out everywhere
-          </Button>
-        </form>
+        <ConfirmAction
+          label="Sign out everywhere"
+          question="Sign out every device, including this one?"
+          confirmLabel="Yes, sign out everywhere"
+          action={signOutEverywhere}
+        />
       </div>
     </div>
   );

@@ -147,4 +147,12 @@ describe("helpers", () => {
       "Chrome on Android phone",
     );
   });
+
+  it("tells an iPad asking for desktop sites apart from a Mac by its touch points", () => {
+    const desktopSafari =
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Safari/605.1.15";
+    expect(deviceLabelFor(desktopSafari)).toBe("Safari on Mac");
+    expect(deviceLabelFor(desktopSafari, { touchPoints: 0 })).toBe("Safari on Mac");
+    expect(deviceLabelFor(desktopSafari, { touchPoints: 5 })).toBe("Safari on iPad");
+  });
 });

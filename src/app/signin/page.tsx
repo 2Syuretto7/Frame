@@ -22,11 +22,7 @@ export default function SignInPage({ searchParams }: PageProps<"/signin">) {
 
 async function SignInContent({ searchParams }: { searchParams: PageProps<"/signin">["searchParams"] }) {
   if (!isDatabaseConfigured()) {
-    return (
-      <Notice>
-        Frame&apos;s database is not connected yet. Finish Task C in the plan, then come back here.
-      </Notice>
-    );
+    return <Notice>Frame cannot reach its database right now. Please try again in a minute.</Notice>;
   }
   if (!(await userExists(getDb()))) {
     return (
@@ -46,7 +42,8 @@ async function SignInContent({ searchParams }: { searchParams: PageProps<"/signi
     <div className="flex flex-col gap-8">
       <SignInForm next={next} />
       <p className="caption m-0 text-ink-faint">
-        Forgotten it? Add a RESET_TOKEN variable in Vercel, then open /reset on this site.
+        Forgotten your passphrase? In Vercel, add an environment variable called RESET_TOKEN, then open /reset on this
+        site to choose a new one.
       </p>
     </div>
   );

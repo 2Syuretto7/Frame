@@ -7,7 +7,7 @@ export const PHASE_1_NODES: NodeSource[] = [
     title: "Programs and output",
     track: "programming",
     kind: "concept",
-    goal: "Run code in the sandbox and predict what it prints",
+    goal: "Read a short program and predict what it prints",
     sessions: 2,
     prereqs: [],
     links: [

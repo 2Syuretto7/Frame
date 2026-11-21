@@ -4,10 +4,16 @@ import type { Track } from "./types";
 
 export const NODE_WIDTH = 216;
 export const NODE_HEIGHT = 64;
-const BAND_HEADER = 72;
+/** Room above each band for its heading, which grows as you zoom out so it stays readable. */
+const BAND_HEADER = 136;
 const BAND_GAP = 56;
 
-const TRACK_ORDER: Record<Track, number> = { programming: 0, maths: 1, systems: 2, design: 3 };
+const TRACK_ORDER: Record<Track, number> = {
+  programming: 0,
+  maths: 1,
+  systems: 2,
+  design: 3,
+};
 
 export interface PlacedNode {
   id: string;
@@ -75,14 +81,26 @@ export async function computeLayout(graph: Graph): Promise<MapLayout> {
         "elk.layered.nodePlacement.strategy": "BRANDES_KOEPF",
         "elk.padding": "[top=0,left=0,bottom=0,right=0]",
       },
-      children: members.map((n) => ({ id: n.id, width: NODE_WIDTH, height: NODE_HEIGHT })),
-      edges: inside.map((e) => ({ id: `${e.from}>${e.to}`, sources: [e.from], targets: [e.to] })),
+      children: members.map((n) => ({
+        id: n.id,
+        width: NODE_WIDTH,
+        height: NODE_HEIGHT,
+      })),
+      edges: inside.map((e) => ({
+        id: `${e.from}>${e.to}`,
+        sources: [e.from],
+        targets: [e.to],
+      })),
     };
 
     const result = await elk.layout(root);
     const offset = top + BAND_HEADER;
     for (const child of result.children ?? []) {
-      nodes.push({ id: child.id, x: Math.round(child.x ?? 0), y: Math.round((child.y ?? 0) + offset) });
+      nodes.push({
+        id: child.id,
+        x: Math.round(child.x ?? 0),
+        y: Math.round((child.y ?? 0) + offset),
+      });
     }
     for (const e of result.edges ?? []) {
       const [from, to] = e.id.split(">");
@@ -92,7 +110,11 @@ export async function computeLayout(graph: Graph): Promise<MapLayout> {
         for (const bend of section.bendPoints ?? []) points.push([bend.x, bend.y + offset]);
         points.push([section.endPoint.x, section.endPoint.y + offset]);
       }
-      edges.push({ from, to, points: points.map(([x, y]) => [Math.round(x), Math.round(y)]) });
+      edges.push({
+        from,
+        to,
+        points: points.map(([x, y]) => [Math.round(x), Math.round(y)]),
+      });
     }
     const height = BAND_HEADER + (result.height ?? 0);
     bands.push({ phase, y: Math.round(top), height: Math.round(height) });

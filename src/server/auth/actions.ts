@@ -12,12 +12,14 @@ import {
   deleteAllSessions,
   deleteOtherSessions,
   deleteSession,
+  relabelSession,
   describeWait,
   recordAttempt,
   userExists,
   type AttemptKind,
 } from "./core";
 import { secretsMatch } from "./crypto";
+import { deviceLabelFor } from "./device";
 import { clientAddressHash, clientUserAgent } from "./request";
 import { clearSessionCookie, getCurrentSession, requireSession, setSessionCookie } from "./session";
 
@@ -27,7 +29,7 @@ export interface FormState {
 }
 
 const NOT_CONNECTED: FormState = {
-  error: "Frame's database is not connected yet. Finish Task C in the plan, then try again.",
+  error: "Frame cannot reach its database right now. Please try again in a minute.",
 };
 
 /** Only same-site paths are allowed as a destination after signing in. */
@@ -50,7 +52,7 @@ async function startSession(): Promise<void> {
 export async function setupAccount(_prev: FormState, form: FormData): Promise<FormState> {
   if (!isDatabaseConfigured()) return NOT_CONNECTED;
   const expected = process.env.SETUP_TOKEN;
-  if (!expected) return { error: "Add SETUP_TOKEN in Vercel's environment variables first (Task C)." };
+  if (!expected) return { error: "Setting up needs a setup code. Add SETUP_TOKEN in Vercel, redeploy, then try again." };
 
   const db = getDb();
   if (await userExists(db)) return { error: "Frame already has its account. Sign in instead." };
@@ -157,4 +159,15 @@ export async function signOutEverywhere(): Promise<void> {
   await deleteAllSessions(getDb());
   await clearSessionCookie();
   redirect("/signin");
+}
+
+/**
+ * Called once per visit by the browser with its touch-point count, so an iPad that
+ * presents itself as a Mac is listed as an iPad in Settings.
+ */
+export async function describeThisDevice(touchPoints: number): Promise<void> {
+  const session = await getCurrentSession();
+  if (!session || !Number.isFinite(touchPoints)) return;
+  const label = deviceLabelFor(await clientUserAgent(), { touchPoints });
+  await relabelSession(getDb(), session.tokenHash, label);
 }

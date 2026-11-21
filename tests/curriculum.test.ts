@@ -174,3 +174,26 @@ describe("seeding the database", () => {
     expect(await db.$count(edge)).toBe(smaller.edges.length);
   });
 });
+
+describe("map arrangement", () => {
+  it("keeps every idea and never lets two phases overlap, in one, two or three columns", async () => {
+    const { computeLayout } = await import("@/curriculum/layout");
+    const { arrange, bestColumns } = await import("@/components/map/arrange");
+    const layout = await computeLayout(GRAPH);
+    const phaseOf = new Map(GRAPH.nodes.map((n) => [n.id, n.phase]));
+    for (const columns of [1, 2, 3]) {
+      const a = arrange(layout, phaseOf, columns);
+      expect(a.nodes).toHaveLength(GRAPH.nodes.length);
+      for (const x of a.bands) {
+        for (const y of a.bands) {
+          if (x === y) continue;
+          const apart =
+            x.x + x.width <= y.x || y.x + y.width <= x.x || x.y + x.height <= y.y || y.y + y.height <= x.y;
+          expect(apart).toBe(true);
+        }
+      }
+    }
+    expect(bestColumns(layout, phaseOf, 1400, 650)).toBeGreaterThan(1);
+    expect(bestColumns(layout, phaseOf, 360, 560)).toBe(1);
+  });
+});

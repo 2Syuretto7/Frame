@@ -54,6 +54,27 @@ export async function changePassphrase(db: Db, passphrase: string): Promise<void
   await db.update(user).set({ passphraseHash, updatedAt: new Date() }).where(eq(user.id, 1));
 }
 
+export interface Account {
+  name: string;
+  createdAt: Date;
+  passphraseChangedAt: Date;
+}
+
+/** The one account's details, for the settings page. */
+export async function getAccount(db: Db): Promise<Account | null> {
+  const rows = await db
+    .select({ name: user.name, createdAt: user.createdAt, passphraseChangedAt: user.updatedAt })
+    .from(user)
+    .where(eq(user.id, 1))
+    .limit(1);
+  return rows[0] ?? null;
+}
+
+/** Corrects a session's device label once the browser has said more about itself. */
+export async function relabelSession(db: Db, tokenHash: string, deviceLabel: string): Promise<void> {
+  await db.update(authSession).set({ deviceLabel }).where(eq(authSession.tokenHash, tokenHash));
+}
+
 export interface NewSession {
   token: string;
   expiresAt: Date;

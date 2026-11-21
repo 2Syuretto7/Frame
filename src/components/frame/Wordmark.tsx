@@ -5,7 +5,7 @@ export function Wordmark() {
   return (
     <Link
       href="/"
-      className="rounded-control text-[18px] leading-6 font-medium tracking-[-0.02em] text-ink no-underline"
+      className="rounded-control text-[18px] leading-6 font-medium tracking-[-0.01em] text-ink no-underline"
     >
       Frame
     </Link>
