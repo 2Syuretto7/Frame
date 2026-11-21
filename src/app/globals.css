@@ -1,0 +1,111 @@
+@import "tailwindcss";
+@import "../styles/midnight-tokens.css";
+@import "../components/midnight/midnight.css";
+
+/*
+ * Tailwind reads Midnight's tokens and nothing else: the default palette is
+ * switched off so no colour can enter the app except through a token.
+ */
+@theme inline {
+  --color-*: initial;
+  --color-ground: var(--background);
+  --color-raised: var(--background-secondary);
+  --color-hover: var(--surface-hover);
+  --color-line: var(--border);
+  --color-line-input: var(--border-input);
+  --color-ink: var(--text-primary);
+  --color-ink-secondary: var(--text-secondary);
+  --color-ink-faint: var(--text-faint);
+  --color-inverse: var(--inverse-background);
+  --color-inverse-ink: var(--inverse-text);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-link: var(--link);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-error: var(--error);
+  --color-error-soft: var(--error-soft);
+  --color-idle: var(--idle);
+  --color-diagram: var(--diagram-background);
+  --color-diagram-line: var(--diagram-border);
+  --color-diagram-ink: var(--diagram-text);
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --radius-*: initial;
+  --radius-control: var(--radius-button);
+  --radius-card: var(--radius-window);
+  --radius-sheet: var(--radius-panel);
+  --radius-round: var(--radius-full);
+}
+
+/*
+ * Midnight names PP Neue Montreal first. Its files are licensed and not bundled,
+ * so the named fallbacks (Inter Tight, JetBrains Mono) are self-hosted by next/font.
+ */
+:root {
+  --font-sans: "PP Neue Montreal", "PPNeueMontreal", var(--font-inter-tight), "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "PP Neue Montreal Mono", "PPNeueMontrealMono", var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+/* Page base sits in the base layer so Midnight's component styles always win over it. */
+@layer base {
+  html {
+    background: var(--background);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text-primary);
+    font: var(--text-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: var(--accent-strong);
+    color: var(--on-accent);
+  }
+
+  /* Focus is always a 2px focus outline with a 2px offset. */
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Side gutters: 16px on phones, 32px (Midnight's section gutter) from tablets up. */
+:root {
+  --gutter: 16px;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --gutter: 32px;
+  }
+}

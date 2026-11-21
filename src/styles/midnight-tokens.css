@@ -1,0 +1,215 @@
+/* Midnight Design System — generated from tokens.json */
+:root, [data-theme="dark"] {
+  --background: #0d0d0d; /* Page ground. Dark-first; gray-900 in dark. */
+  --background-secondary: #141414; /* Raised surfaces: code blocks, tooltips, panels. */
+  --surface-hover: #272727; /* Hover fill for nav items and rows. Never a text ground for faint text. */
+  --border: #272727; /* Default hairline (0.67–1px) on cards, panels and dividers. Draw structure with borders, not shadows. */
+  --border-input: #4d4d4d; /* Form control outlines; meets 3:1 against background in both themes. */
+  --tag-border: #ffffff29; /* Outline of small mono tags (NEW, FEATURED). Decorative only; the tag text carries the meaning. */
+  --text-primary: #ffffff; /* Headlines, body and button labels on background and background-secondary. */
+  --text-secondary: #c7c7c7; /* Lead paragraphs and descriptions on background / background-secondary (≥ 7:1 both themes). */
+  --text-faint: #b3b3b3; /* Meta text, captions, tag labels on background / background-secondary (≥ 4.5:1 both themes). */
+  --inverse-background: #ffffff; /* Primary button fill and other inverted blocks. */
+  --inverse-text: #0d0d0d; /* Text on inverse-background. */
+  --accent: #a3a3ff; /* The product accent (navy #000073). Light theme uses it directly; dark theme uses navy-300 so text stays legible on near-black. In-progress status, active states, highlights. */
+  --accent-strong: #000073; /* The brand navy as a fill: primary-button hover wipe, selected blocks. Pair with on-accent text. On dark grounds it needs a hairline or adjacent light content to be seen. */
+  --on-accent: #ffffff; /* Text on accent-strong (17:1). */
+  --accent-soft: #4d4dc933; /* Badge ground behind accent text. */
+  --link: #c2c2ff; /* Inline links on background. */
+  --focus: #a3a3ff; /* Keyboard focus ring: 2px solid, 2px offset. */
+  --badge-text: #c2c2ff; /* Announcement / eyebrow badge text on accent-soft. */
+  --success: #45c98f; /* Active and complete status text and dot, on success-soft or background. */
+  --success-soft: #45c98f1f; /* Ground of a success badge. */
+  --error: #ff6b70; /* Failed status and destructive messages, on error-soft or background. */
+  --error-soft: #ff6b701f; /* Ground of an error badge. */
+  --warning: #ecd60e; /* Pending status and warnings, on warning-soft or background. */
+  --warning-soft: #ecd60e1a; /* Ground of a warning badge. */
+  --idle: #55534f; /* Status dot for paused or inactive items. Under 3:1 on the dark background, so always pair the dot with a text label. */
+  --code-background: #141414; /* Code block ground. Stays dark in both themes. */
+  --code-border: #303030; /* Outline of code windows. */
+  --code-text: #eeeeee; /* Default code text on code-background. */
+  --code-muted: #aaaaaa; /* Timestamps, comments, window titles on code-background. */
+  --code-keyword: #a3a3ff; /* Keywords on code-background. */
+  --code-string: #eabe95; /* Strings on code-background. */
+  --code-number: #faf1a3; /* Numbers on code-background. */
+  --code-success: #5cffb8; /* Success lines in code output on code-background. */
+  --diagram-background: #0f0f26; /* Diagram ground (navy-tinted). */
+  --diagram-border: #26266b; /* Diagram node outlines and dashed fences. */
+  --diagram-text: #c2c2ff; /* Labels on diagram-background. */
+  --promo-background: #1a1a33; /* Announcement bar and promo cards. */
+  --overlay: #0d0d0d9e; /* Scrim behind menus and over imagery (62%). */
+  --illustration-deep: #000073; /* Illustration only: the deep brand navy. Never text. */
+  --illustration-mid: #4d4dc9; /* Illustration only: mid navy-blue. */
+  --illustration-warm: #7199ff; /* Illustration only: periwinkle light. */
+  --illustration-cool: #fa9199; /* Illustration only: coral glow. */
+  --illustration-sun: #faf1a3; /* Illustration only: pale yellow. */
+  --brand-block: #1f1fa3; /* Large brand-colour blocks (covers, hero panels). #000073 in light; navy-600 in dark, where pure #000073 would vanish against near-black. */
+  --navy-100: #e0e0ff; /* Primitive. Navy scale built around the brand #000073 (navy-700); prefer semantic tokens. */
+  --navy-200: #c2c2ff; /* Primitive navy. */
+  --navy-300: #a3a3ff; /* Primitive navy. */
+  --navy-400: #8585f2; /* Primitive navy. */
+  --navy-500: #4d4dc9; /* Primitive navy. */
+  --navy-600: #1f1fa3; /* Primitive navy. */
+  --navy-700: #000073; /* Primitive navy. The brand colour. */
+  --navy-800: #00004d; /* Primitive navy. */
+  --navy-900: #000033; /* Primitive navy. */
+  --gray-50: #f0f0f0; /* Primitive neutral. */
+  --gray-100: #e3e3e3; /* Primitive neutral. */
+  --gray-200: #c7c7c7; /* Primitive neutral. */
+  --gray-300: #b3b3b3; /* Primitive neutral. */
+  --gray-400: #8f8f8f; /* Primitive neutral. */
+  --gray-500: #6b6b6b; /* Primitive neutral. */
+  --gray-600: #4d4d4d; /* Primitive neutral. */
+  --gray-700: #272727; /* Primitive neutral. */
+  --gray-800: #141414; /* Primitive neutral. */
+  --gray-900: #0d0d0d; /* Primitive neutral. */
+  --shadow-product: 0 1px 2px rgba(0,0,0,0.3), 0 18px 40px -12px rgba(0,0,0,0.6); /* Screenshots and floating windows. */
+  --shadow-float: 0 10px 30px -16px rgba(0,0,0,0.8); /* A window floating over a diagram or panel. */
+}
+[data-theme="light"] {
+  --background: #ffffff;
+  --background-secondary: #fafafa;
+  --surface-hover: #f0f0f0;
+  --border: #e3e3e3;
+  --border-input: #8f8f8f;
+  --tag-border: #0d0d0d29;
+  --text-primary: #0d0d0d;
+  --text-secondary: #4d4d4d;
+  --text-faint: #6b6b6b;
+  --inverse-background: #0d0d0d;
+  --inverse-text: #ffffff;
+  --accent: #000073;
+  --accent-strong: #000073;
+  --on-accent: #ffffff;
+  --accent-soft: #e0e0ff;
+  --link: #000073;
+  --focus: #000073;
+  --badge-text: #000073;
+  --success: #006d4c;
+  --success-soft: #dffeed;
+  --error: #af1d27;
+  --error-soft: #fce9ea;
+  --warning: #614e00;
+  --warning-soft: #fffbc2;
+  --idle: #8f8f8f;
+  --code-background: #141414;
+  --code-border: #303030;
+  --code-text: #eeeeee;
+  --code-muted: #aaaaaa;
+  --code-keyword: #a3a3ff;
+  --code-string: #eabe95;
+  --code-number: #faf1a3;
+  --code-success: #5cffb8;
+  --diagram-background: #f5f5ff;
+  --diagram-border: #c2c2ff;
+  --diagram-text: #000073;
+  --promo-background: #e0e0ff;
+  --overlay: #ffffff9e;
+  --illustration-deep: #000073;
+  --illustration-mid: #4d4dc9;
+  --illustration-warm: #7199ff;
+  --illustration-cool: #fa9199;
+  --illustration-sun: #faf1a3;
+  --brand-block: #000073;
+}
+:root {
+  --space-0-5: 2px; /* Gap between stacked tiles in dense grids. */
+  --space-1: 4px; /* Icon-to-label gap inside badges. */
+  --space-2: 8px; /* Badge horizontal padding; nav item padding. */
+  --space-3: 12px; /* Most common flex gap; tooltip padding. */
+  --space-4: 16px; /* Card internal gap; form field stacks. */
+  --space-5: 20px; /* Button horizontal padding. */
+  --space-6: 24px; /* Gap between feature cards. */
+  --space-8: 32px; /* Section side gutter; column gap. */
+  --space-12: 48px; /* Gap between header and content in a section. */
+  --space-16: 64px; /* Vertical section padding (mobile). */
+  --space-32: 128px; /* Vertical rhythm between major landing-page sections. */
+  --container-max: 1440px; /* Max content width. */
+  --radius-button: 2px; /* Buttons, badges, tags, nav items. The near-square corner is a signature. */
+  --radius-window: 4px; /* Cards, panels, code windows, tooltips. */
+  --radius-panel: 6px; /* Large panels. */
+  --radius-lg: 8px; /* Rare: media frames. */
+  --radius-full: 9999px; /* Status dots and avatars only. */
+  --font-sans: "PP Neue Montreal", "PPNeueMontreal", "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "PP Neue Montreal Mono", "PPNeueMontrealMono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --text-display: 500 44px/44px var(--font-sans);
+  --text-heading-1: 500 40px/43px var(--font-sans);
+  --text-heading-2: 500 24px/27px var(--font-sans);
+  --text-lead: 400 18px/28.8px var(--font-sans);
+  --text-body: 400 16px/24px var(--font-sans);
+  --text-label: 500 16px/24px var(--font-sans);
+  --text-small: 500 14px/20px var(--font-sans);
+  --text-caption: 400 12px/16px var(--font-sans);
+  --text-code: 400 12px/18px var(--font-mono);
+  --text-eyebrow: 400 11px/13px var(--font-mono);
+}
+.display {
+  font-family: var(--font-sans);
+  font-size: 44px;
+  line-height: 44px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+.heading-1 {
+  font-family: var(--font-sans);
+  font-size: 40px;
+  line-height: 43px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+.heading-2 {
+  font-family: var(--font-sans);
+  font-size: 24px;
+  line-height: 27px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.lead {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 28.8px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+.body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.label {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.small {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.caption {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 13px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}

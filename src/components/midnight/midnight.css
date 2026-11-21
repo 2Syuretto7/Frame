@@ -1,0 +1,68 @@
+/*
+ * Midnight component styles, ported from the Midnight Design System bundle
+ * (components/bundle.css). Class names and values are kept exactly as supplied.
+ * Two changes only: fonts are self-hosted by next/font instead of loaded from
+ * Google Fonts, and the preview-only helpers (.mds-row, .mds-grid, body) are
+ * left out because Frame sets its own page base in globals.css.
+ */
+@layer components {
+  /* Button */
+  .mds-btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: var(--space-2); height: 40px; padding: 0 var(--space-5); border-radius: var(--radius-button); font: 500 16px/24px var(--font-sans); cursor: pointer; text-decoration: none; border: 1px solid transparent; transition: background-color .2s ease, color .2s ease, border-color .2s ease; isolation: isolate; }
+  .mds-btn::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--accent-strong); transform: translateX(-101%); transition: transform .25s ease; }
+  .mds-btn-primary { background: var(--inverse-background); color: var(--inverse-text); }
+  .mds-btn-primary:hover { color: var(--on-accent); }
+  .mds-btn-primary:hover::before { transform: translateX(0); }
+  .mds-btn-secondary { background: var(--background); color: var(--text-primary); border-color: var(--text-primary); }
+  .mds-btn-secondary:hover { background: var(--surface-hover); }
+  .mds-btn-ghost { background: transparent; color: var(--text-primary); height: 36px; padding: 0 var(--space-2); font-size: 14px; line-height: 20px; }
+  .mds-btn-ghost:hover { background: var(--surface-hover); }
+  .mds-btn:focus-visible, .mds-input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .mds-btn[disabled] { opacity: .5; cursor: not-allowed; }
+
+  /* StatusBadge */
+  .mds-badge { display: inline-flex; align-items: center; gap: var(--space-1); height: 20px; padding: 2px 8px 2px 4px; box-sizing: border-box; border-radius: var(--radius-button); font: 400 12px/16px var(--font-sans); white-space: nowrap; }
+  .mds-badge-dot { width: 6px; height: 6px; margin: 0 2px; border-radius: var(--radius-full); background: currentColor; }
+  .mds-badge-success { background: var(--success-soft); color: var(--success); }
+  .mds-badge-accent { background: var(--accent-soft); color: var(--accent); }
+  .mds-badge-warning { background: var(--warning-soft); color: var(--warning); }
+  .mds-badge-error { background: var(--error-soft); color: var(--error); }
+  .mds-badge-idle { background: var(--surface-hover); color: var(--text-faint); }
+  .mds-badge-idle .mds-badge-dot { background: var(--idle); }
+  .mds-badge-new { background: var(--accent-soft); color: var(--badge-text); padding: 2px 8px; }
+
+  /* Tag */
+  .mds-tag { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; box-sizing: border-box; border: 1px solid var(--tag-border); border-radius: var(--radius-button); font: 400 11px/13px var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--text-faint); }
+
+  /* FeatureCard */
+  .mds-card { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-6); border: 1px solid var(--border); border-radius: var(--radius-window); background: var(--background); }
+  .mds-card-icon { width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: var(--radius-button); color: var(--accent); }
+  .mds-card-title { margin: var(--space-2) 0 0; font: 500 18px/24px var(--font-sans); letter-spacing: -.01em; color: var(--text-primary); }
+  .mds-card-desc { margin: 0; font: 400 16px/24px var(--font-sans); color: var(--text-secondary); }
+
+  /* StatusTile */
+  .mds-tile { display: flex; align-items: center; gap: var(--space-3); min-width: 200px; padding: var(--space-3); background: var(--background-secondary); border: 1px solid var(--border); border-radius: var(--radius-window); box-sizing: border-box; }
+  .mds-tile-icon { width: 28px; height: 28px; flex: none; display: grid; place-items: center; border: 1px solid var(--border); border-radius: var(--radius-button); color: var(--text-faint); font: 500 12px/1 var(--font-mono); }
+  .mds-tile-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+  .mds-tile-name { font: 500 14px/20px var(--font-sans); color: var(--text-primary); }
+  .mds-tile-type { font: 400 12px/16px var(--font-sans); color: var(--text-faint); }
+  .mds-tile-active { border-color: var(--accent); }
+
+  /* CodeWindow */
+  .mds-window { background: var(--code-background); border: 1px solid var(--code-border); border-radius: var(--radius-window); box-shadow: var(--shadow-float); overflow: hidden; color: var(--code-text); font: 400 12px/18px var(--font-mono); }
+  .mds-window-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--code-border); }
+  .mds-window-title { font-size: 11px; line-height: 16px; color: var(--code-muted); }
+  .mds-window-body { margin: 0; padding: var(--space-3); white-space: pre-wrap; }
+  .mds-window-line { display: block; }
+  .mds-window-time { color: var(--code-muted); margin-right: var(--space-3); }
+  .mds-window-success { color: var(--code-success); }
+  .mds-window-keyword { color: var(--code-keyword); }
+  .mds-window-string { color: var(--code-string); }
+
+  /* TextField */
+  .mds-field { display: flex; flex-direction: column; gap: var(--space-2); max-width: 320px; }
+  .mds-label { font: 500 14px/20px var(--font-sans); color: var(--text-primary); }
+  .mds-input { height: 40px; padding: 0 var(--space-3); border: 1px solid var(--border-input); border-radius: var(--radius-button); background: var(--background); color: var(--text-primary); font: 400 16px/24px var(--font-sans); }
+  .mds-input::placeholder { color: var(--text-faint); }
+  .mds-hint { font: 400 12px/16px var(--font-sans); color: var(--text-faint); }
+  .mds-hint-error { color: var(--error); }
+}
