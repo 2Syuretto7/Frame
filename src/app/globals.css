@@ -79,6 +79,8 @@
 @layer base {
   html {
     background: var(--background);
+    /* JetBrains Mono would otherwise draw >= as a single symbol, which misleads beginners. */
+    font-variant-ligatures: no-contextual;
     -webkit-text-size-adjust: 100%;
   }
 
@@ -125,5 +127,55 @@
 @media (min-width: 640px) {
   :root {
     --gutter: 32px;
+  }
+}
+
+/*
+ * Lesson prose uses Midnight's lead style, because a lesson is long reading,
+ * with lines kept to about 70 characters.
+ */
+@layer components {
+  .lesson-prose {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    max-width: 70ch;
+    font: var(--text-lead);
+    color: var(--text-secondary);
+  }
+
+  .lesson-prose p,
+  .lesson-prose ul,
+  .lesson-prose ol {
+    margin: 0;
+  }
+
+  .lesson-prose ul,
+  .lesson-prose ol {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    padding-left: 1.25em;
+  }
+
+  .lesson-prose strong {
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .lesson-prose code,
+  .lesson-list code {
+    font: 400 0.85em/1 var(--font-mono);
+    color: var(--text-primary);
+    background: var(--background-secondary);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0.1em 0.3em;
+    white-space: nowrap;
+  }
+
+  .lesson-list li::marker,
+  .lesson-prose li::marker {
+    color: var(--text-faint);
   }
 }

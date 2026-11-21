@@ -1,6 +1,7 @@
 "use client";
 
-import { X } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, X } from "lucide-react";
 import { StatusBadge, Tag, type Status } from "@/components/midnight";
 import { STATE_LABELS, type NodeState } from "@/curriculum/status";
 import { KIND_LABELS, TRACK_LABELS } from "@/curriculum/types";
@@ -83,7 +84,16 @@ export function NodePanel({ data, node, onSelect, onClose }: NodePanelProps) {
       </section>
       <section className="flex flex-col gap-2">
         <h3 className="small m-0 text-ink">Lesson</h3>
-        <p className="caption m-0 text-ink-faint">Lessons arrive in the next update, starting with Phase 1.</p>
+        {data.lessonIds.includes(node.id) ? (
+          <div>
+            <Link href={`/learn/${node.id}`} className="mds-btn mds-btn-secondary">
+              Open the lesson
+              <ArrowRight size={16} strokeWidth={1.5} aria-hidden="true" />
+            </Link>
+          </div>
+        ) : (
+          <p className="caption m-0 text-ink-faint">This lesson is still being written. It will be ready before you reach it.</p>
+        )}
       </section>
     </div>
   );

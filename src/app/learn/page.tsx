@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button, Tag } from "@/components/midnight";
 import { Page } from "@/components/frame/Page";
 
@@ -19,8 +19,15 @@ export default function LearnPage() {
           left off, and give you one focused session. It arrives with Milestone 7, after accounts, the
           curriculum, lessons, the code editor and fresh practice are in place.
         </p>
-        <div>
-          <Button href="/" variant="secondary">
+        <p className="body m-0 text-ink-secondary">
+          The first lessons are ready to read now, with diagrams you can play with.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Button href="/learn/1.01" variant="secondary">
+            Start with 1.01 Programs and output
+            <ArrowRight size={16} strokeWidth={1.5} aria-hidden="true" />
+          </Button>
+          <Button href="/" variant="ghost">
             <ArrowLeft size={16} strokeWidth={1.5} aria-hidden="true" />
             Back home
           </Button>
