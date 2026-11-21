@@ -5,6 +5,7 @@ import type { MapData } from "@/components/map/types";
 import { GRAPH, PHASES } from "@/curriculum/graph";
 import { computeLayout } from "@/curriculum/layout";
 import { deriveStates } from "@/curriculum/status";
+import { LESSON_IDS } from "@/lessons";
 
 export const metadata: Metadata = { title: "Knowledge map" };
 
@@ -34,6 +35,7 @@ export default async function MapPage() {
     phases: PHASES,
     layout,
     views,
+    lessonIds: LESSON_IDS,
   };
 
   return (

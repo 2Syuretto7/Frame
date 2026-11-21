@@ -21,4 +21,6 @@ export interface MapData {
   phases: PhaseInfo[];
   layout: MapLayout;
   views: Record<string, NodeView>;
+  /** Nodes that have a written lesson. */
+  lessonIds: string[];
 }
